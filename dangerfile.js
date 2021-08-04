@@ -120,7 +120,10 @@ function row(result) {
     ...danger.git.modified_files,
   ];
   if (
-    commitFiles.every(filename => filename.includes('packages/react-devtools'))
+    commitFiles // yarn.lock might be modified even just execute "yarn install" without install or remove any package and never touch "package.json".
+      // This appearing under the specific node.js versions. refer https://github.com/yarnpkg/yarn/issues/4379#issuecomment-620012910
+      .filter(filename => filename !== 'yarn.lock')
+      .every(filename => filename.includes('packages/react-devtools'))
   )
     return;
 
